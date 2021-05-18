@@ -9,7 +9,7 @@ def row_string(row):
     return '  {} | {} | {}  \n'.format(row[0], row[1], row[2])
 
 def board_string(board):
-    return ' ---+---+--- \n'.join([row_string(board[(i * 3):(i * 3) + 3]) for i in range(3)]) + '\n'
+    return '{}\n'.format(' ---+---+--- \n'.join([row_string(board[(i * 3):(i * 3) + 3]) for i in range(3)]))
 
 
 
@@ -88,8 +88,7 @@ def best_move(board, player):
 
 def minimax(board, player, alpha, beta):
     if game_over(board):
-        winner = player_win(board)
-        return 1 if winner == 'O' else -1 if winner == 'X' else 0
+        return ['X', None, 'O'].index(player_win(board)) - 1
 
     best_score = -math.inf if player == 'O' else math.inf
 
@@ -119,13 +118,11 @@ def main(argv):
     board  = ['.', '.', '.', '.', '.', '.', '.', '.', '.']
     player = 'X'
 
-
     while not game_over(board):
         board  = move(board, get_move(board, player), player)
         player = next_player(player)
 
         print('\n{}\n'.format(board_string(board)))
-
 
     print('X wins\n' if board_win(board, 'X') else 'O wins\n' if board_win(board, 'O') else 'Draw\n')
 
