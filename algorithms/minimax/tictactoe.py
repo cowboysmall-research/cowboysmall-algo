@@ -5,11 +5,13 @@ import requests
 
 
 
+
 def row_string(row):
     return '  {} | {} | {}  \n'.format(row[0], row[1], row[2])
 
 def board_string(board):
     return '{}\n'.format(' ---+---+--- \n'.join([row_string(board[(i * 3):(i * 3) + 3]) for i in range(3)]))
+
 
 
 
@@ -24,6 +26,7 @@ def next(player):
 
 
 
+
 def has_row(board, player):
     return any(board[(i * 3):(i * 3) + 3].count(player) == 3 for i in range(3))
 
@@ -32,6 +35,7 @@ def has_column(board, player):
 
 def has_diagonal(board, player):
     return [board[0], board[4], board[8]].count(player) == 3 or [board[2], board[4], board[6]].count(player) == 3
+
 
 
 
@@ -87,6 +91,7 @@ def minimax(board, player, alpha, beta):
 
 
 
+
 def main(argv):
     print('\nTic Tac Toe Simulator\n')
     print('\n{}\n'.format(board_string(range(1, 10))))
@@ -101,6 +106,7 @@ def main(argv):
         print('\n{}\n'.format(board_string(board)))
 
     print('X wins\n\n' if board_win(board, 'X') else 'O wins\n\n' if board_win(board, 'O') else 'Draw\n\n')
+
 
 
 
