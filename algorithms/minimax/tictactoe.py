@@ -17,14 +17,8 @@ def board_string(board):
 def legal_moves(board):
     return [i for i in range(len(board)) if board[i] == '.']
 
-def move(board, position, player):
-    return [player if i == position else board[i] for i in range(len(board))]
-
-
-
-
-def next_player(player):
-    return 'X' if player == 'O' else 'O'
+def make_move(board, move, player):
+    return [player if i == move else board[i] for i in range(len(board))]
 
 
 
@@ -53,7 +47,10 @@ def game_over(board):
 
 
 
-def player_win(board):
+def next(player):
+    return 'X' if player == 'O' else 'O'
+
+def winner(board):
     return 'X' if board_win(board, 'X') else 'O' if board_win(board, 'O') else None
 
 
@@ -61,40 +58,29 @@ def player_win(board):
 
 def get_move(board, player):
     if player == 'X':
-        return int(input('X to move: ')) - 1
+        move = int(input('X to move: ')) - 1
+
+        while move not in legal_moves(board):
+            print('\nIllegal move - try again\n')
+            move = int(input('X to move: ')) - 1
+
+        return move
     else:
-        print('O to move:')
-        return best_move(board, player)
-
-
-
-
-def best_move(board, player):
-    best_score     = -math.inf
-    best_position  = None
-
-    for position in legal_moves(board):
-
-        score = minimax(move(board, position, player), next_player(player), -math.inf, math.inf)
-
-        if score > best_score:
-            best_score     = score
-            best_position  = position
-
-    return best_position
+        print('O to move: ')
+        return max([(minimax(make_move(board, move, player), next(player), -math.inf, math.inf), move) for move in legal_moves(board)], key = lambda x: x[0])[1]
 
 
 
 
 def minimax(board, player, alpha, beta):
     if game_over(board):
-        return ['X', None, 'O'].index(player_win(board)) - 1
+        return ['X', None, 'O'].index(winner(board)) - 1
 
     best_score = -math.inf if player == 'O' else math.inf
 
-    for position in legal_moves(board):
+    for move in legal_moves(board):
 
-        score = minimax(move(board, position, player), next_player(player), alpha, beta)
+        score = minimax(make_move(board, move, player), next(player), alpha, beta)
 
         if player == 'O':
             best_score = max(best_score, score)
@@ -119,8 +105,8 @@ def main(argv):
     player = 'X'
 
     while not game_over(board):
-        board  = move(board, get_move(board, player), player)
-        player = next_player(player)
+        board  = make_move(board, get_move(board, player), player)
+        player = next(player)
 
         print('\n{}\n'.format(board_string(board)))
 
