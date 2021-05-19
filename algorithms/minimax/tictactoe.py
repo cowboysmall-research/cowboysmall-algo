@@ -13,13 +13,14 @@ def board_string(board):
 
 
 
-
 def legal_moves(board):
     return [i for i in range(len(board)) if board[i] == '.']
 
 def make_move(board, move, player):
     return [player if i == move else board[i] for i in range(len(board))]
 
+def next(player):
+    return 'X' if player == 'O' else 'O'
 
 
 
@@ -34,7 +35,6 @@ def has_diagonal(board, player):
 
 
 
-
 def board_win(board, player):
     return has_row(board, player) or has_column(board, player) or has_diagonal(board, player)
 
@@ -43,15 +43,6 @@ def board_full(board):
 
 def game_over(board):
     return board_win(board, 'X') or board_win(board, 'O') or board_full(board)
-
-
-
-
-def next(player):
-    return 'X' if player == 'O' else 'O'
-
-def winner(board):
-    return 'X' if board_win(board, 'X') else 'O' if board_win(board, 'O') else None
 
 
 
@@ -69,8 +60,8 @@ def get_move(board, player):
         print('O to move: ')
         return max([(minimax(make_move(board, move, player), next(player), -math.inf, math.inf), move) for move in legal_moves(board)], key = lambda x: x[0])[1]
 
-
-
+def winner(board):
+    return 'X' if board_win(board, 'X') else 'O' if board_win(board, 'O') else None
 
 def minimax(board, player, alpha, beta):
     if game_over(board):
@@ -96,7 +87,6 @@ def minimax(board, player, alpha, beta):
 
 
 
-
 def main(argv):
     print('\nTic Tac Toe Simulator\n')
     print('\n{}\n'.format(board_string(range(1, 10))))
@@ -110,8 +100,7 @@ def main(argv):
 
         print('\n{}\n'.format(board_string(board)))
 
-    print('X wins\n' if board_win(board, 'X') else 'O wins\n' if board_win(board, 'O') else 'Draw\n')
-
+    print('X wins\n\n' if board_win(board, 'X') else 'O wins\n\n' if board_win(board, 'O') else 'Draw\n\n')
 
 
 
